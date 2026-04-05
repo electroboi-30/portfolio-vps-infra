@@ -46,5 +46,3 @@ title.style.display = "none";
 banner.style.display = "block";
 }
 });
-
-navigator.vibrate(100);
