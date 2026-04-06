@@ -8,41 +8,31 @@ const maxEscape = 8;
 
 moveButton();
 
-// Desktop hover
-btn.addEventListener("mouseover", escape);
+// Universal handler (works for both mobile & desktop)
+btn.addEventListener("pointerdown", (e) => {
+  e.preventDefault();
 
-// Mobile touch
-btn.addEventListener("touchstart", (e) => {
-e.preventDefault(); // prevents instant click
-escape();
+  if (escapeCount < maxEscape) {
+    moveButton();
+    escapeCount++;
+  } else {
+    // Final success
+    btn.style.display = "none";
+    message.style.display = "none";
+    title.style.display = "none";
+    banner.style.display = "block";
+  }
 });
-
-function escape() {
-if (escapeCount < maxEscape) {
-moveButton();
-escapeCount++;
-}
-}
 
 function moveButton() {
-const gameArea = document.getElementById("gameArea");
+  const gameArea = document.getElementById("gameArea");
 
-const maxX = gameArea.clientWidth - btn.offsetWidth;
-const maxY = gameArea.clientHeight - btn.offsetHeight;
+  const maxX = gameArea.clientWidth - btn.offsetWidth;
+  const maxY = gameArea.clientHeight - btn.offsetHeight;
 
-const randomX = Math.random() * maxX;
-const randomY = Math.random() * maxY;
+  const randomX = Math.random() * maxX;
+  const randomY = Math.random() * maxY;
 
-btn.style.left = randomX + "px";
-btn.style.top = randomY + "px";
+  btn.style.left = randomX + "px";
+  btn.style.top = randomY + "px";
 }
-
-// Final click
-btn.addEventListener("click", () => {
-if (escapeCount >= maxEscape) {
-btn.style.display = "none";
-message.style.display = "none";
-title.style.display = "none";
-banner.style.display = "block";
-}
-});
