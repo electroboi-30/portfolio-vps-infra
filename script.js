@@ -70,11 +70,15 @@ async function fetchStats() {
 
     // Convert uptime from mins → hrs + mins
     const mins = parseInt(data.uptime);
+    const days= Math.floor(mins/1440)
     const hours = Math.floor(mins / 60);
     const remainingMins = mins % 60;
 
     let uptimeText = "";
-    if (hours > 0) {
+    if(days > 0){
+      uptimeText = `${days} days ${hours} hrs ${remainingMins} mins`;
+    }
+    else if (hours > 0) {
       uptimeText = `${hours} hrs ${remainingMins} mins`;
     } else {
       uptimeText = `${remainingMins} mins`;
