@@ -9,6 +9,7 @@ skills      - My skills
 projects    - My work
 experience  - Experience
 contact     - Contact info
+stats       - Realtime Server Utilisation
 clear       - Clear terminal
 `,
 
@@ -50,6 +51,10 @@ expanding expertise in Docker and CI/CD.
 Email: pnayakar7@gmail.com
 GitHub: github.com/electroboi-30
 LinkedIn: linkedin.com/in/pravinnayakar
+`,
+
+stats: `
+
 `
 };
 
@@ -58,7 +63,34 @@ function print(text) {
   output.scrollTop = output.scrollHeight;
 }
 
-input.addEventListener("keydown", function(e) {
+async function fetchStats() {
+  try {
+    const res = await fetch("/api/stats");
+    const data = await res.json();
+
+    // Convert uptime from mins → hrs + mins
+    const mins = parseInt(data.uptime);
+    const hours = Math.floor(mins / 60);
+    const remainingMins = mins % 60;
+
+    let uptimeText = "";
+    if (hours > 0) {
+      uptimeText = `${hours} hrs ${remainingMins} mins`;
+    } else {
+      uptimeText = `${remainingMins} mins`;
+    }
+
+    return `
+CPU Usage: ${data.cpu}
+RAM Usage: ${data.ram}
+Uptime: ${uptimeText}
+`;
+  } catch (err) {
+    return "Error fetching server stats";
+  }
+}
+
+input.addEventListener("keydown", async function(e) {
   if (e.key === "Enter") {
     const cmd = input.value.trim();
 
@@ -66,9 +98,16 @@ input.addEventListener("keydown", function(e) {
 
     if (cmd === "clear") {
       output.innerHTML = "";
-    } else if (commands[cmd]) {
+    } 
+    else if (cmd === "stats") {
+      print("Fetching live server stats...\n");
+      const stats = await fetchStats();
+      print(stats);
+    }
+    else if (commands[cmd]) {
       print(commands[cmd]);
-    } else {
+    } 
+    else {
       print("Command not found. Type 'help'");
     }
 
