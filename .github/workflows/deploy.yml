@@ -20,4 +20,5 @@ jobs:
             cd /var/www/test_site/Test_VPS
             git pull origin main
             pm2 restart all
-            echo "${{ secrets.SUDO_PASSWORD }}" | sudo -S systemctl reload nginx
+            sudo nginx -t
+            sudo systemctl reload nginx
