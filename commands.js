@@ -1,0 +1,53 @@
+//These are the constant files for the Portfolio Site
+const commands = {
+  help: `
+Available commands:
+whoami      - About me
+skills      - My skills
+projects    - My work
+experience  - Experience
+contact     - Contact info
+stats       - Realtime Server Utilisation
+clear       - Clear terminal
+`,
+
+  whoami: `
+Pravin Nayakar
+DevOps Engineer
+
+I work with Linux, NGINX, Docker and cloud technologies.
+Passionate about automation and scalable infrastructure.
+`,
+
+  skills: `
+- Linux
+- NGINX
+- Docker
+- Git & GitHub
+- CI/CD
+- AWS Basics
+- Shell Scripting
+- JavaScript
+`,
+
+  projects: `
+1. NGINX Reverse Proxy
+2. Dockerized Applications
+3. VPS Hosting & Deployment
+`,
+
+  experience: `
+TCS - Working professional
+
+DevOps-focused engineer with a background in software development and hands-on experience in
+Linux server management, web hosting, and deployment workflows. Skilled in configuring NGINX,
+managing deployments using Git, and troubleshooting real-world production issues. Currently
+expanding expertise in Docker and CI/CD.
+`,
+
+  contact: `
+Email: pnayakar7@gmail.com
+GitHub: github.com/electroboi-30
+LinkedIn: linkedin.com/in/pravinnayakar
+`,
+};
