@@ -6,6 +6,7 @@ function print(text) {
   output.scrollTop = output.scrollHeight;
 }
 
+//This function gets the Json and converts to DaysHHMM
 async function fetchStats() {
   try {
     const res = await fetch("/api/stats");
@@ -64,6 +65,11 @@ input.addEventListener("keydown", async function(e) {
 
     input.value = "";
   }
+});
+
+//Logic for Mobile Device
+document.addEventListener("click", () => {
+  input.focus();
 });
 
 // Initial welcome message
