@@ -101,9 +101,12 @@ input.addEventListener("keydown", async function(e) {
 
     print(`pravin@devops:~$ ${cmd}`);
 
-    if (cmd === "clear") {
-      output.innerHTML = "";
-    } 
+  if (cmd === "clear") {
+    output.innerHTML = "";
+
+    setTimeout(() => print("Clearing screen..."), 100);
+    setTimeout(() => print("Type 'help' to begin.\n"), 500);
+  } 
     else if (cmd === "stats") {
       print("Fetching live server stats...\n");
       const stats = await fetchStats();
