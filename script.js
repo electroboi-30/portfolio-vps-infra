@@ -1,6 +1,6 @@
 //Handles Mobile user's UI 
 if (/Mobi|Android|iPhone/i.test(navigator.userAgent)) {
-  window.location.href = "mobile.html";
+  window.location.href = "mobile.html";;
 }
 
 const output = document.getElementById("output");
