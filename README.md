@@ -1,4 +1,4 @@
-# Test_VPS
+# Portfolio
 This is my personal portfolio site which I have hosted in my Cloud VPS using Nginx.
 
 You may access my Portfolio by accessing the below link.
