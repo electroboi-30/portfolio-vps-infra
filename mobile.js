@@ -12,7 +12,7 @@ async function typeText(text) {
 
   for (let char of text) {
 
-    // 🛑 stop if new command started
+    //stop if new command started
     if (typingId !== currentTypingId) return;
 
     output.innerHTML += char;
@@ -31,14 +31,30 @@ async function run(cmd) {
     await typeText("> Fetching live stats...\n");
 
     try {
-      const res = await fetch("/api/stats");
-      const data = await res.json();
+    const res = await fetch("/api/stats");
+    const data = await res.json();
 
-      await typeText(`
-CPU Usage: ${data.cpu}
-RAM Usage: ${data.ram}
-Uptime: ${data.uptime}
-`);
+    // Convert uptime from mins → hrs + mins
+    const mins = parseInt(data.uptime);
+    const days= Math.floor(mins/1440)
+    const remainingAfterDays = mins % 1440;
+    const hours = Math.floor(remainingAfterDays / 60);
+    const remainingMins = remainingAfterDays % 60;
+
+    let uptimeText = "";
+    if(days > 0){
+      uptimeText = `${days} days ${hours} hrs ${remainingMins} mins`;
+    }
+    else if (hours > 0) {
+      uptimeText = `${hours} hrs ${remainingMins} mins`;
+    } else {
+      uptimeText = `${remainingMins} mins`;
+    }
+
+    return `
+    CPU Usage: ${data.cpu}
+    RAM Usage: ${data.ram}
+    Uptime: ${uptimeText}`;
     } catch {
       await typeText("Error fetching stats");
     }
