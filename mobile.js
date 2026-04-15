@@ -31,7 +31,7 @@ async function run(cmd) {
     await typeText("> Fetching live stats...\n");
 
     try {
-    const res = await fetch("/api/stats");
+    const res = await fetch("../api/stats");
     const data = await res.json();
 
     // Convert uptime from mins → hrs + mins
