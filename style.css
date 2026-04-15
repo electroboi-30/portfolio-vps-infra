@@ -62,6 +62,10 @@ input {
   font-family: monospace;
 }
 
+button:active {
+  transform: scale(0.95);
+}
+
 /*MOBILE RESPONSIVE FIX */
 @media (max-width: 768px) {
 
