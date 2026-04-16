@@ -49,5 +49,6 @@ expanding expertise in Docker and CI/CD.
 Email: pnayakar7@gmail.com
 GitHub: github.com/electroboi-30
 LinkedIn: linkedin.com/in/pravinnayakar
+Mobile Number: Amio
 `,
 };
