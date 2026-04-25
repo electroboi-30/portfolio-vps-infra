@@ -37,7 +37,7 @@ Passionate about automation and scalable infrastructure.
 `,
 
   experience: `
-TCS - Working professional
+TCS - Software Engineer
 
 DevOps-focused engineer with a background in software development and hands-on experience in
 Linux server management, web hosting, and deployment workflows. Skilled in configuring NGINX,
