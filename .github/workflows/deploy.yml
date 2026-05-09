@@ -18,5 +18,7 @@ jobs:
           script: |
             cd ~/portfolio-vps-infra
             git pull origin main
+            docker stop nginx node-app || true
+            docker rm nginx node-app || true
             docker-compose down
             docker-compose up -d --build
