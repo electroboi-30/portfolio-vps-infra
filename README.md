@@ -1,128 +1,205 @@
 #  Portfolio VPS Infrastructure
 
-[![Deploy to VPS](https://github.com/electroboi-30/Test_VPS/actions/workflows/deploy.yml/badge.svg)](https://github.com/electroboi-30/Test_VPS/actions)
+[![Deploy to VPS](https://github.com/electroboi-30/portfolio-vps-infra/actions/workflows/deploy.yml/badge.svg)](https://github.com/electroboi-30/portfolio-vps-infra/actions)
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat&logo=docker&logoColor=white)
 ![Nginx](https://img.shields.io/badge/Nginx-009639?style=flat&logo=nginx&logoColor=white)
 ![Node.js](https://img.shields.io/badge/Node.js-339933?style=flat&logo=nodedotjs&logoColor=white)
+![Prometheus](https://img.shields.io/badge/Prometheus-E6522C?style=flat&logo=prometheus&logoColor=white)
+![Grafana](https://img.shields.io/badge/Grafana-F46800?style=flat&logo=grafana&logoColor=white)
 ![GitHub Actions](https://img.shields.io/badge/CI%2FCD-GitHub_Actions-2088FF?style=flat&logo=githubactions&logoColor=white)
 ![Platform](https://img.shields.io/badge/Platform-Linux_VPS-FCC624?style=flat&logo=linux&logoColor=black)
 
-> Personal portfolio website self-hosted on a cloud VPS, with a real-time Node.js system stats API and automated deployments via GitHub Actions.
+> Personal portfolio fully containerized on a cloud VPS with a Node.js system stats API, Prometheus + Grafana monitoring, SSL, and automated deployments via GitHub Actions.
 
 ---
 
-##  Live Links
+## Live Links
 
 | Service | URL |
 |---|---|
-|  Portfolio Site | [https://rootssh.me](https://rootssh.me) |
-|  VPS Stats API | [https://rootssh.me/api/stats](https://rootssh.me/api/stats) |
+| Portfolio Site | [https://rootssh.me](https://rootssh.me) |
+| VPS Stats API | [https://rootssh.me/api/stats](https://rootssh.me/api/stats) |
+| Grafana Dashboard | [https://grafana.rootssh.me](https://grafana.rootssh.me) |
 
 ---
 
-##  Architecture
+## Architecture
 
 ```
-                    Internet
-                       │
-                       ▼
-              ┌─────────────────┐
-              │   Nginx (80)    │  ← Reverse proxy + static file server
-              └────────┬────────┘
-                       │
-          ┌────────────┴────────────┐
-          ▼                         ▼
-  ┌──────────────┐         ┌─────────────────┐
-  │  index.html  │         │  Node.js Server  │  ← /api/stats endpoint
-  │  (Portfolio) │         │  (System Metrics)│
-  └──────────────┘         └─────────────────┘
-```
+                         Internet
+                            │
+                ┌───────────┴───────────┐
+                ▼                       ▼
+         rootssh.me              grafana.rootssh.me
+                \                       /
+                 └──────────┬──────────┘
+                            ▼
+               ┌─────────────────────┐
+               │   Nginx Container   │  ← Reverse proxy + SSL termination
+               │   (ports 80, 443)   │
+               └──────┬──────────────┘
+                      │
+          ┌───────────┴────────────┐
+          ▼                        ▼
+  ┌──────────────┐       ┌──────────────────┐
+  │  index.html  │       │  node-app:3000   │  ← /api/* (internal only)
+  │  (Portfolio) │       │  System Metrics  │
+  └──────────────┘       └──────────────────┘
 
-- **Nginx** serves static HTML/CSS/JS for the portfolio and proxies `/api/*` requests to the Node.js backend
-- **Node.js backend** exposes `/api/stats` with real-time CPU, memory, and uptime data fetched from the Linux system
-- **GitHub Actions** SSHs into the VPS on every push to `main` and pulls the latest code automatically
+  ┌──────────────┐       ┌──────────────────┐
+  │  Prometheus  │  ←──  │  Node Exporter   │  ← VPS hardware metrics
+  │  :9090       │       │  :9100           │
+  └──────┬───────┘       └──────────────────┘
+         │
+         ▼
+  ┌──────────────┐
+  │   Grafana    │  ← Live dashboards
+  │   :3000      │
+  └──────────────┘
+```
 
 ---
 
-## ⚙️ CI/CD Pipeline
+## Stack
+
+| Layer | Technology |
+|---|---|
+| Web Server / Reverse Proxy | Nginx (Docker) |
+| Backend API | Node.js (Docker) |
+| Metrics Collection | Prometheus + Node Exporter |
+| Monitoring Dashboard | Grafana |
+| Containerization | Docker + Docker Compose |
+| SSL | Let's Encrypt (Certbot) |
+| Frontend | HTML, CSS, JavaScript |
+| CI/CD | GitHub Actions |
+| Hosting | Linux Cloud VPS (2 vCPU, 2GB RAM, 50GB) |
+
+---
+
+## Project Structure
+
+```
+portfolio-vps-infra/
+├── .github/
+│   └── workflows/
+│       └── deploy.yml          # GitHub Actions CI/CD pipeline
+├── app/
+│   ├── server.js               # Node.js stats API
+│   ├── package.json
+│   └── Dockerfile              # Node.js container build
+├── nginx/
+│   └── default.conf            # Nginx routing + SSL config
+├── prometheus/
+│   └── prometheus.yml          # Prometheus scrape config
+├── js/                         # Frontend scripts
+├── docker-compose.yml          # All 5 services wired together
+├── index.html                  # Portfolio page
+├── style.css
+└── script.js
+```
+
+---
+
+## Services
+
+| Container | Role | Port |
+|---|---|---|
+| `nginx` | Reverse proxy, serves static files, SSL termination | 80, 443 |
+| `node-app` | System stats API (`/api/stats`) | 3000 (internal) |
+| `prometheus` | Scrapes and stores metrics every 15s | 9090 (internal) |
+| `grafana` | Visualizes metrics as dashboards | 3000 (internal) |
+| `node-exporter` | Exposes VPS hardware metrics to Prometheus | 9100 (internal) |
+
+> Only nginx is exposed to the internet. All other containers communicate internally via Docker network.
+
+---
+
+## CI/CD Pipeline
 
 Every push to `main` triggers an automated deployment:
 
 ```
-Push to main
-     │
-     ▼
-GitHub Actions Workflow
-     │
-     ├─ SSH into VPS
-     ├─ git pull latest code
-     ├─ Restart Node.js service (if needed)
-     └─ Site is live
+git push origin main
+        │
+        ▼
+GitHub Actions triggers
+        │
+        ▼
+SSH into VPS
+        │
+        ├── git pull origin main
+        ├── docker stop/rm old containers
+        ├── docker-compose down
+        └── docker-compose up -d --build
+                │
+                ├── node-app health check passes
+                └── nginx starts → site is live
 ```
-
-The workflow file lives at `.github/workflows/deploy.yml`.
 
 ---
 
-##  Stats API Response
+## Stats API
 
 Hitting `/api/stats` returns live server metrics:
 
 ```json
 {
-  "cpu": "12%",
-  "memory": {
-    "total": "2GB",
-    "used": "780MB",
-    "free": "1.22GB"
-  },
-  "uptime": "3 days, 4 hours"
+  "cpu": "5.8%",
+  "ram": "42.7%",
+  "uptime": "11 mins"
 }
 ```
 
 ---
 
-##  Project Structure
+## Local Development
 
-```
-Test_VPS/
-├── .github/
-│   └── workflows/
-│       └── deploy.yml       # GitHub Actions CI/CD pipeline
-├── js/                      # Additional scripts
-├── index.html               # Main portfolio page
-├── mobile.html              # Mobile-optimised version
-├── style.css                # Desktop styles
-├── mobile.css               # Mobile styles
-├── script.js                # Frontend JS
-└── mobile.js                # Mobile JS
+```bash
+# clone the repo
+git clone https://github.com/electroboi-30/portfolio-vps-infra.git
+cd portfolio-vps-infra
+
+# start all services
+docker-compose up --build
+
+# visit
+http://localhost
 ```
 
 ---
 
-##  Stack
+## Deployment
 
-| Layer | Technology |
-|---|---|
-| Web Server / Reverse Proxy | Nginx |
-| Backend API | Node.js |
-| Frontend | HTML, CSS, JavaScript |
-| CI/CD | GitHub Actions |
-| Hosting | Linux Cloud VPS |
+Deployment is fully automated via GitHub Actions on every push to `main`.
 
----
-
-##  What I Learned
-
-- Configuring Nginx as both a static server and a reverse proxy
-- Writing a GitHub Actions workflow for automated SSH deployments
-- Building a lightweight system metrics API in Node.js without external monitoring tools
-- Managing a live Linux server including process management and networking
+Manual deploy if needed:
+```bash
+cd ~/portfolio-vps-infra
+docker-compose down
+docker-compose up -d --build
+```
 
 ---
 
-##  Roadmap
+## What I Built
 
-- [ ] Add Dockerfile and containerize the app
-- [ ] Set up a custom domain with SSL (Let's Encrypt)
-- [ ] Add Prometheus + Grafana for proper metrics dashboarding
-- [ ] Expand CI/CD pipeline with a health check step post-deploy
+- Containerized a full-stack app with Docker Compose — nginx + Node.js as isolated containers
+- Configured nginx as a reverse proxy routing `/api/*` to Node.js internally (port 3000 never exposed to internet)
+- Set up a complete monitoring stack with Prometheus + Grafana accessible at grafana.rootssh.me
+- Automated CI/CD pipeline — git push to main triggers SSH deploy and full container rebuild
+- SSL with Let's Encrypt on both rootssh.me and grafana.rootssh.me
+- Health checks ensuring nginx only starts after Node.js is confirmed alive
+
+---
+
+## Roadmap
+
+- [x] Containerize with Docker + Docker Compose
+- [x] Custom domain with SSL (Let's Encrypt)
+- [x] Prometheus + Grafana monitoring
+- [x] GitHub Actions CI/CD pipeline
+- [x] Health checks
+- [ ] Portainer for container management
+- [ ] Migrate to AWS EC2
+- [ ] Terraform for infrastructure as code
+- [ ] Kubernetes deployment
