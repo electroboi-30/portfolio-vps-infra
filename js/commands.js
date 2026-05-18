@@ -149,7 +149,7 @@ const commands = {
   Email     :  pnayakar7@gmail.com
   GitHub    :  github.com/electroboi-30
   LinkedIn  :  linkedin.com/in/pravinnayakar
-  Server    :  154.61.74.145
+  Website   :  https://rootssh.me
 
   I'm currently open to DevOps roles in Chennai.
   If you're hiring or want to collaborate — reach out.
