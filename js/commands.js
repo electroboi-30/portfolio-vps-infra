@@ -59,7 +59,7 @@ const commands = {
 
   Cloud & Monitoring
   ──────────────────
-  ▸ AWS Basics                 — EC2, S3, IAM
+  ▸ AWS                        — EC2, S3, IAM
   ▸ System Monitoring          — uptime, CPU/RAM, logs
 
   Dev Background
