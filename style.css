@@ -24,6 +24,16 @@ html, body {
   color: var(--green);
   font-family: 'Share Tech Mono', monospace;
   overflow: hidden;
+  overscroll-behavior: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 /* ===== BACKGROUND EFFECTS ===== */
@@ -60,6 +70,19 @@ html, body {
   margin: 0 auto;
   padding: 16px;
   gap: 0;
+  animation: crtBoot 0.85s steps(1, end);
+  transform-origin: center;
+}
+
+/* CRT power-on flicker, plays once on load */
+@keyframes crtBoot {
+  0%   { opacity: 0;   filter: brightness(2.4); transform: scaleY(1.03); }
+  6%   { opacity: 1;   filter: brightness(0.3); transform: scaleY(0.99); }
+  9%   { opacity: 0.3; filter: brightness(1.6); }
+  13%  { opacity: 1;   filter: brightness(0.6); }
+  18%  { opacity: 0.7; filter: brightness(1.4); }
+  24%  { opacity: 1;   filter: brightness(1);    transform: scaleY(1); }
+  100% { opacity: 1;   filter: brightness(1);    transform: scaleY(1); }
 }
 
 /* ===== TOP BAR ===== */
@@ -109,6 +132,27 @@ html, body {
   color: var(--green);
   text-shadow: 0 0 10px var(--green);
   letter-spacing: 2px;
+  position: relative;
+}
+
+.title-text.glitching::before,
+.title-text.glitching::after {
+  content: attr(data-text);
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  background: var(--bg2);
+}
+.title-text.glitching::before {
+  color: #ff4040;
+  clip-path: inset(0 0 55% 0);
+  transform: translate(-2px, -1px);
+}
+.title-text.glitching::after {
+  color: #00e5ff;
+  clip-path: inset(45% 0 0 0);
+  transform: translate(2px, 1px);
 }
 
 .clock {
@@ -170,8 +214,37 @@ html, body {
   text-align: left;
   position: relative;
   overflow: hidden;
-  transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+  transition: border-color 0.2s, background 0.2s, box-shadow 0.2s, transform 0.1s;
   width: 100%;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.cmd-btn:focus-visible {
+  outline: 2px solid var(--green);
+  outline-offset: 2px;
+}
+
+/* Immediate visual feedback on touch devices, driven by JS touch handlers
+   since iOS Safari doesn't reliably fire :active on tap */
+.cmd-btn.touching {
+  background: var(--green-dim);
+  border-color: var(--green);
+  transform: scale(0.97);
+}
+
+.cmd-btn.danger.touching {
+  background: rgba(255, 64, 64, 0.18);
+  border-color: #ff4040;
+}
+
+.cmd-btn.active {
+  border-color: var(--green);
+  background: var(--green-glow);
+  box-shadow: 0 0 14px var(--green-glow);
+}
+.cmd-btn.active .btn-prefix {
+  color: var(--green);
 }
 
 .cmd-btn::before {
@@ -282,6 +355,27 @@ html, body {
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  position: relative;
+}
+
+/* Subtle ambient glow drifting behind the output panel for depth */
+.output-panel::before {
+  content: '';
+  position: absolute;
+  top: -15%;
+  right: -8%;
+  width: 320px;
+  height: 320px;
+  background: radial-gradient(circle, var(--green-glow), transparent 70%);
+  filter: blur(50px);
+  animation: driftGlow 14s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+@keyframes driftGlow {
+  0%, 100% { transform: translate(0, 0); opacity: 0.5; }
+  50%      { transform: translate(-40px, 50px); opacity: 0.85; }
 }
 
 .output-header {
@@ -294,6 +388,29 @@ html, body {
   color: var(--text-dim);
   letter-spacing: 3px;
   background: var(--bg2);
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+/* Loading sweep — plays briefly whenever a command executes */
+.loading-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  width: 0%;
+  background: var(--green);
+  box-shadow: 0 0 8px var(--green);
+  opacity: 0;
+}
+.loading-bar.active {
+  animation: loadingSweep 0.55s ease-in-out;
+}
+@keyframes loadingSweep {
+  0%   { left: 0%;   width: 0%;  opacity: 1; }
+  55%  { left: 15%;  width: 55%; opacity: 1; }
+  100% { left: 100%; width: 0%;  opacity: 0; }
 }
 
 .output-badge {
@@ -314,6 +431,10 @@ html, body {
   color: var(--green);
   text-shadow: 0 0 4px rgba(0,255,156,0.3);
   animation: flicker 8s infinite alternate;
+  position: relative;
+  z-index: 1;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
 }
 
 .output::-webkit-scrollbar {
@@ -341,6 +462,8 @@ html, body {
   padding: 12px 24px;
   border-top: 1px solid var(--border);
   background: var(--bg2);
+  position: relative;
+  z-index: 1;
 }
 
 .cursor-line {

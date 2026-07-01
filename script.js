@@ -1,3 +1,6 @@
+// ===== MOTION PREFERENCE =====
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
 // ===== CLOCK =====
 function updateClock() {
   const now = new Date();
@@ -72,6 +75,49 @@ async function fetchStats() {
   }
 }
 
+// ===== TITLE GLITCH =====
+// Rare, subtle RGB-split glitch on the terminal title — off entirely if the
+// user prefers reduced motion.
+function scheduleTitleGlitch() {
+  if (prefersReducedMotion) return;
+  const titleEl = document.getElementById('titleText');
+  if (!titleEl) return;
+
+  const delay = 6000 + Math.random() * 9000; // every 6-15s
+  setTimeout(() => {
+    titleEl.classList.add('glitching');
+    setTimeout(() => titleEl.classList.remove('glitching'), 160);
+    scheduleTitleGlitch();
+  }, delay);
+}
+scheduleTitleGlitch();
+
+// ===== COMMAND LOADING SWEEP =====
+function triggerLoadingSweep() {
+  const bar = document.getElementById('loadingBar');
+  if (!bar) return;
+  bar.classList.remove('active');
+  // Force reflow so the animation restarts on rapid repeat taps
+  void bar.offsetWidth;
+  bar.classList.add('active');
+}
+
+// ===== MOBILE TOUCH FEEDBACK =====
+// iOS Safari doesn't reliably fire :active on tap, so drive immediate
+// pressed-state feedback from touch events instead.
+document.querySelectorAll('.cmd-btn').forEach(btn => {
+  btn.addEventListener('touchstart', () => {
+    btn.classList.add('touching');
+    if (navigator.vibrate) {
+      try { navigator.vibrate(8); } catch (e) { /* no-op */ }
+    }
+  }, { passive: true });
+
+  const release = () => btn.classList.remove('touching');
+  btn.addEventListener('touchend', release, { passive: true });
+  btn.addEventListener('touchcancel', release, { passive: true });
+});
+
 // ===== BUTTON ACTIVE STATE =====
 function setActiveBtn(label) {
   document.querySelectorAll('.cmd-btn').forEach(btn => btn.classList.remove('active'));
@@ -88,6 +134,7 @@ async function run(cmd) {
   currentTypingId++; // cancel any ongoing typing
 
   setActiveBtn(cmd);
+  triggerLoadingSweep();
 
   if (cmd === 'stats') {
     await typeText('> Fetching live server stats...\n');
@@ -105,6 +152,7 @@ async function run(cmd) {
 
 function clearOutput() {
   currentTypingId++;
+  triggerLoadingSweep();
   output.innerHTML = '';
   updateLineCount();
   document.querySelectorAll('.cmd-btn').forEach(btn => btn.classList.remove('active'));
