@@ -4,155 +4,174 @@ const commands = {
 
   help: `
   ┌─────────────────────────────────────────┐
-  │         AVAILABLE COMMANDS              │
+  │  AVAILABLE COMMANDS                      │
   └─────────────────────────────────────────┘
 
-  whoami        →  Who am I
-  skills        →  Tech stack & tools
-  projects      →  Things I've built
-  experience    →  Work history
-  contact       →  Reach me
-  stats         →  Live server utilisation
-  clear         →  Clear terminal
+  whoami        Overview
+  skills        Technical stack
+  projects      Selected work
+  experience    Professional background
+  contact       Get in touch
+  stats         Live server metrics
+  clear         Clear terminal
 `,
 
   whoami: `
   ┌─────────────────────────────────────────┐
-  │         PRAVIN NAYAKAR                  │
-  │         DevOps Engineer                 │
+  │  PRAVIN NAYAKAR                          │
+  │  DevOps Engineer                         │
   └─────────────────────────────────────────┘
 
-  Location  :  Chennai, India
-  Status    :  Open to DevOps opportunities
-  Focus     :  Infrastructure · Automation · Deployment
+  Location    Chennai, India
+  Status      Open to DevOps opportunities
+  Focus       Infrastructure, Automation, CI/CD
 
-  I'm a DevOps-focused engineer who went from building
-  frontends to falling in love with what runs behind them.
+  Engineer transitioning from frontend and mobile
+  development into infrastructure and DevOps, with
+  ~4.5 years of professional experience at TCS.
 
-  I manage real Linux servers, configure NGINX from scratch,
-  write CI/CD pipelines that actually ship, and host everything
-  on my own cloud VPS — because the best way to learn
-  infrastructure is to break it yourself.
+  I manage a self-hosted Linux/VPS environment end to
+  end — server provisioning, NGINX and reverse proxy
+  configuration, containerised services, CI/CD pipelines,
+  and monitoring — as a working proof of the skills listed
+  below, not just a resume line.
 
-  Currently at TCS, actively targeting a full DevOps role
-  in Chennai. I build things, document them, and share them.
+  Currently pursuing AWS Solutions Architect Associate
+  certification and building toward Kubernetes (CKA).
 `,
 
   skills: `
   ┌─────────────────────────────────────────┐
-  │         TECH STACK                      │
+  │  TECHNICAL STACK                         │
   └─────────────────────────────────────────┘
 
-  Infrastructure
-  ──────────────
-  ▸ Linux (Ubuntu / Debian)    — daily driver
-  ▸ NGINX                      — reverse proxy, SSL, static hosting
-  ▸ Docker                     — containerised deployments
-  ▸ VPS / Cloud                — self-managed production server
-  ▸ SSH                        — key auth, tunnelling, hardening
+  Infrastructure & Systems
+  ─────────────────────────
+  Linux (Ubuntu/Debian)     Server administration
+  NGINX                     Reverse proxy, SSL/TLS, static hosting
+  Docker                    Containerised service deployment
+  Portainer                 Container management
+  SSH                       Key-based auth, tunnelling, hardening
 
   Automation & CI/CD
-  ──────────────────
-  ▸ GitHub Actions             — pipelines for auto-deploy
-  ▸ Shell Scripting            — bash automation & cron jobs
-  ▸ Git                        — branching, workflows, hooks
+  ─────────────────────────
+  GitHub Actions            Automated deploy pipelines
+  Shell Scripting           Bash automation, cron
+  Git                       Branching workflows, hooks
 
   Cloud & Monitoring
-  ──────────────────
-  ▸ AWS                        — EC2, S3, IAM
-  ▸ System Monitoring          — uptime, CPU/RAM, logs
+  ─────────────────────────
+  AWS                       EC2, S3, IAM
+  Prometheus / Grafana      Metrics collection & dashboards
+  Cloudflare Tunnel         Secure remote access
 
-  Dev Background
-  ──────────────
-  ▸ JavaScript / Node.js       — scripting & backend APIs
-  ▸ HTML / CSS                 — frontend fundamentals
-  ▸ Kony (Temenos)             — mobile app platform (prior role)
+  Currently Building
+  ─────────────────────────
+  AWS SAA-C03               In progress
+  Kubernetes (CKA track)    In progress
+  Terraform                 In progress
+
+  Development Background
+  ─────────────────────────
+  JavaScript / Node.js      Scripting & backend APIs
+  HTML / CSS                Frontend fundamentals
+  Kony (Temenos)             Mobile app platform (prior role)
 `,
 
   projects: `
   ┌─────────────────────────────────────────┐
-  │         PROJECTS                        │
+  │  PROJECTS                                │
   └─────────────────────────────────────────┘
 
   01 — Personal Cloud VPS
-  ───────────────────────
-  Self-managed Ubuntu VPS running NGINX as a reverse proxy,
-  serving this portfolio site with SSL. Node.js backend
-  exposes a live /api/stats endpoint for real-time CPU,
-  RAM and uptime metrics.
+  ─────────────────────────
+  Self-managed Ubuntu VPS running NGINX as a reverse
+  proxy with SSL, serving this portfolio. A Node.js
+  backend exposes a live /api/stats endpoint reporting
+  real-time CPU, RAM, and uptime metrics.
 
   Stack: Ubuntu · NGINX · Node.js · PM2
 
-  02 — GitHub Actions CI/CD Pipeline
-  ────────────────────────────────────
-  Automated deployment workflow — push to main, code lands
-  on the server. Zero manual SSH deploys. Built using
-  GitHub Actions with SSH deploy keys and remote exec.
+  02 — CI/CD Deployment Pipeline
+  ─────────────────────────
+  Automated deployment workflow triggered on push to
+  main — code is built, tested, and shipped to the
+  server via SSH deploy keys with no manual steps.
 
   Stack: GitHub Actions · SSH · Bash
 
-  03 — NGINX Reverse Proxy Setup
-  ───────────────────────────────
-  Configured NGINX to route multiple services on a single
-  server, handle SSL termination via Certbot, and serve
-  static files with caching headers.
+  03 — NGINX Reverse Proxy & Multi-Service Routing
+  ─────────────────────────
+  Configured NGINX to route multiple services on a
+  single host, with SSL termination via Certbot and
+  cached static file delivery.
 
   Stack: NGINX · Certbot · Let's Encrypt
 
-  04 — Terminal Portfolio (this site)
-  ─────────────────────────────────────
-  A hacker-aesthetic portfolio built entirely in vanilla
-  HTML, CSS and JS — no frameworks. Runs on the VPS.
-  Tap-based UI for both desktop and mobile.
+  04 — Homelab Monitoring Stack
+  ─────────────────────────
+  Docker-based observability stack for a personal
+  homelab — Prometheus scraping node-exporter metrics,
+  visualised in Grafana, with services managed through
+  Portainer and exposed securely via Cloudflare Tunnel.
+
+  Stack: Docker · Prometheus · Grafana · Portainer
+
+  05 — Terminal Portfolio (this site)
+  ─────────────────────────
+  Hacker-aesthetic portfolio built in vanilla HTML,
+  CSS, and JS — no frameworks. Deployed on the VPS
+  with a command-based UI for desktop and mobile.
 
   Stack: HTML · CSS · JS · NGINX
 `,
 
   experience: `
   ┌─────────────────────────────────────────┐
-  │         EXPERIENCE                      │
+  │  EXPERIENCE                              │
   └─────────────────────────────────────────┘
 
-  TATA CONSULTANCY SERVICES (TCS)
+  Tata Consultancy Services (TCS)
   Software Engineer  ·  2022 – Present
-  ────────────────────────────────────────
-  Started in application development with a focus on
-  Kony (Temenos) mobile platform and frontend engineering.
+  ─────────────────────────────────────────
+  Began in application development on the Kony
+  (Temenos) mobile platform, focused on frontend
+  engineering for banking applications.
 
-  Over time, shifted focus toward infrastructure and DevOps —
-  managing deployments, configuring servers, and building
-  automation workflows independently alongside project work.
+  Progressively shifted focus toward infrastructure
+  and DevOps — managing deployments, configuring
+  servers, and building automation workflows
+  independently alongside core project work.
 
   Key areas:
-  ▸ Frontend & mobile app development (Kony platform)
-  ▸ Linux server administration (personal + VPS projects)
-  ▸ NGINX configuration and production deployments
-  ▸ CI/CD automation with GitHub Actions
-  ▸ Self-hosted infrastructure on cloud VPS
+  · Frontend & mobile application development (Kony)
+  · Linux server administration
+  · NGINX configuration and production deployments
+  · CI/CD automation with GitHub Actions
+  · Self-hosted infrastructure design and operations
 
-  ────────────────────────────────────────
-  HOMELAB / SELF-TAUGHT DEVOPS
+  ─────────────────────────────────────────
+  Independent Infrastructure Projects
   Ongoing
-  ────────────────────────────────────────
-  Outside of work, I run a personal homelab where I
-  experiment with Docker, networking, automation and
-  anything else that looks interesting on a Friday night.
-
-  This is where most of the real learning happens.
+  ─────────────────────────────────────────
+  Design and operate a personal homelab and VPS
+  covering containerisation, networking, monitoring,
+  and automation — used as an applied testbed for
+  DevOps practices ahead of a full-time transition.
 `,
 
   contact: `
   ┌─────────────────────────────────────────┐
-  │         CONTACT                         │
+  │  CONTACT                                 │
   └─────────────────────────────────────────┘
 
-  Email     :  pnayakar7@gmail.com
-  GitHub    :  github.com/electroboi-30
-  LinkedIn  :  linkedin.com/in/pravinnayakar
-  Website   :  https://rootssh.me
+  Email       pnayakar7@gmail.com
+  GitHub      github.com/electroboi-30
+  LinkedIn    linkedin.com/in/pravinnayakar
+  Website     https://rootssh.me
 
-  I'm currently open to DevOps roles in Chennai.
-  If you're hiring or want to collaborate — reach out.
+  Open to DevOps roles in Chennai.
+  Reach out for opportunities or collaboration.
 `,
 
 };
