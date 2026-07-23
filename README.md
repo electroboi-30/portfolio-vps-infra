@@ -91,11 +91,14 @@ portfolio-vps-infra/
 │   └── default.conf            # Nginx routing + SSL config
 ├── prometheus/
 │   └── prometheus.yml          # Prometheus scrape config
-├── js/                         # Frontend scripts
+├── public/                     # Nginx webroot (only this is served)
+│   ├── index.html              # Portfolio page
+│   ├── style.css
+│   ├── script.js
+│   ├── js/                     # Frontend scripts
+│   └── favicon/
+├── .env.example                # Copy to .env on the VPS, fill in real secrets
 ├── docker-compose.yml          # All 5 services wired together
-├── index.html                  # Portfolio page
-├── style.css
-└── script.js
 ```
 
 ---
