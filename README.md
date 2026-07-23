@@ -96,6 +96,7 @@ portfolio-vps-infra/
 │   ├── style.css
 │   ├── script.js
 │   ├── js/                     # Frontend scripts
+│   ├── fonts/                  # Self-hosted webfonts
 │   └── favicon/
 ├── .env.example                # Copy to .env on the VPS, fill in real secrets
 ├── docker-compose.yml          # All 5 services wired together
