@@ -160,21 +160,29 @@ function clearOutput() {
 }
 
 // ===== BOOT SEQUENCE =====
+// whoami is printed automatically (not just on click) so a visitor's — and a
+// search crawler's — first render already has real, indexable page content
+// instead of an empty shell.
 async function boot() {
-  const lines = [
+  const introLines = [
     '> Initializing terminal...',
     '> Loading profile: pravin@devops',
     '> Establishing secure connection...',
     '> Connection established.',
-    '',
-    '  Type or tap a command to begin.',
-    '  Try [help] to get started.',
   ];
 
-  for (const line of lines) {
+  for (const line of introLines) {
     print(line);
     await new Promise(r => setTimeout(r, 120));
   }
+
+  if (typeof commands !== 'undefined' && commands.whoami) {
+    print(`> whoami\n${commands.whoami}`);
+    setActiveBtn('whoami');
+  }
+
+  print('  Type or tap a command to begin.');
+  print("  Try [help] to see everything available.");
 }
 
 boot();
