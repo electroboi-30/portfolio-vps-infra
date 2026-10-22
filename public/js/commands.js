@@ -169,9 +169,6 @@ const commands = {
   GitHub      github.com/electroboi-30
   LinkedIn    linkedin.com/in/pravinnayakar
   Website     https://rootssh.me
-
-  Open to DevOps roles in Chennai.
-  Reach out for opportunities or collaboration.
 `,
 
 };
