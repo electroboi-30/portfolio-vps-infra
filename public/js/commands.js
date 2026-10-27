@@ -171,4 +171,51 @@ const commands = {
   Website     https://rootssh.me
 `,
 
+  // ── Hidden easter eggs — intentionally left out of `help` and the
+  // ── sidebar, discoverable only by typing them into the command input.
+  sudo: `
+  Permission denied: nice try, but you're not root here. 🔒
+`,
+
+  'sudo su': `
+  Access denied. This incident will be reported. (Not really.)
+`,
+
+  'rm -rf /': `
+  Deleting all files.........
+  ...........................
+  Just kidding — nothing was harmed. This isn't a real shell. 😄
+`,
+
+  ssh: `
+  Connecting to root@rootssh.me...
+  Permission denied (publickey). Nice try though.
+`,
+
+  exit: `
+  You can check out any time you like, but you can never leave.
+`,
+
+  logout: `
+  You can check out any time you like, but you can never leave.
+`,
+
+  matrix: `
+  Wake up, Neo...
+  The Matrix has you. Follow the white rabbit. 🐇
+`,
+
+  42: `
+  The Answer to the Ultimate Question of Life, the Universe, and Everything.
+`,
+
+  hack: `
+  Hacking mainframe............. 100%
+  Just kidding. I don't do that here. 😅
+`,
+
+  coffee: `
+  ☕ Here's your coffee. Now get back to work.
+`,
+
 };
