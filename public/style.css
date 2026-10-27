@@ -466,44 +466,13 @@ html, body {
   z-index: 1;
 }
 
-.cmd-form {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex: 1;
-  min-width: 0;
-}
-
-.prompt-label {
+.cursor-line {
   font-size: 0.9rem;
-  color: var(--green);
-  white-space: nowrap;
-}
-
-.cmd-input {
-  flex: 1;
-  min-width: 0;
-  background: transparent;
-  border: none;
-  outline: none;
-  color: var(--green);
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 0.9rem;
-  caret-color: var(--green);
-  text-shadow: 0 0 4px rgba(0, 255, 156, 0.3);
-}
-
-.cmd-input::placeholder {
-  color: var(--text-dim);
 }
 
 .cursor {
   animation: cursorBlink 1s infinite;
   color: var(--green);
-}
-
-.cmd-input:focus ~ .cursor {
-  display: none;
 }
 
 @keyframes cursorBlink {

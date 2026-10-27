@@ -15,13 +15,6 @@ updateClock();
 // ===== OUTPUT =====
 const output = document.getElementById('output');
 
-// ===== HTML ESCAPING (user-typed input can now reach innerHTML) =====
-function escapeHtml(str) {
-  return str.replace(/[&<>"']/g, (c) => ({
-    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
-  }[c]));
-}
-
 let lineCount = 0;
 
 function updateLineCount() {
@@ -42,17 +35,12 @@ async function typeText(text) {
   currentTypingId++;
   const typingId = currentTypingId;
 
-  let built = '';
   output.innerHTML = '';
   updateLineCount();
 
   for (let char of text) {
     if (typingId !== currentTypingId) return;
-    built += char;
-    // Set from a local buffer rather than reading output.innerHTML back —
-    // the getter re-serializes entities on every read, which double-escapes
-    // any "&" introduced by escapeHtml() if accumulated via +=.
-    output.innerHTML = built;
+    output.innerHTML += char;
     output.scrollTop = output.scrollHeight;
     await new Promise(r => setTimeout(r, 2));
   }
@@ -148,8 +136,6 @@ async function run(cmd) {
   setActiveBtn(cmd);
   triggerLoadingSweep();
 
-  const safeCmd = escapeHtml(cmd);
-
   if (cmd === 'stats') {
     await typeText('> Fetching live server stats...\n');
     const stats = await fetchStats();
@@ -158,9 +144,9 @@ async function run(cmd) {
   }
 
   if (typeof commands !== 'undefined' && commands[cmd]) {
-    await typeText(`> ${safeCmd}\n\n${commands[cmd]}`);
+    await typeText(`> ${cmd}\n\n${commands[cmd]}`);
   } else {
-    await typeText(`> ${safeCmd}\n\n  command not found. type 'help' to see available commands.`);
+    await typeText(`> ${cmd}\n\n  command not found. type 'help' to see available commands.`);
   }
 }
 
@@ -171,72 +157,6 @@ function clearOutput() {
   updateLineCount();
   document.querySelectorAll('.cmd-btn').forEach(btn => btn.classList.remove('active'));
   setTimeout(() => typeText('> Screen cleared.\n> Tap a command to begin.'), 100);
-}
-
-// ===== COMMAND LINE INPUT =====
-// Commands shown in the sidebar/help text — the only ones Tab-autocompletes,
-// so easter eggs in commands.js stay genuinely hidden.
-const VISIBLE_COMMANDS = ['help', 'whoami', 'skills', 'projects', 'experience', 'contact', 'stats', 'clear'];
-
-const cmdForm = document.getElementById('cmdForm');
-const cmdInput = document.getElementById('cmdInput');
-
-let commandHistory = [];
-let historyIndex = 0;
-
-function normalizeCmd(raw) {
-  return raw.trim().toLowerCase().replace(/\s+/g, ' ');
-}
-
-async function submitCommand(raw) {
-  const cmd = normalizeCmd(raw);
-  if (!cmd) return;
-
-  commandHistory.push(raw.trim());
-  historyIndex = commandHistory.length;
-
-  if (cmd === 'clear') {
-    clearOutput();
-    return;
-  }
-
-  await run(cmd);
-}
-
-if (cmdForm && cmdInput) {
-  cmdForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const val = cmdInput.value;
-    cmdInput.value = '';
-    submitCommand(val);
-  });
-
-  cmdInput.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowUp') {
-      e.preventDefault();
-      if (commandHistory.length === 0) return;
-      historyIndex = Math.max(0, historyIndex - 1);
-      cmdInput.value = commandHistory[historyIndex] ?? '';
-    } else if (e.key === 'ArrowDown') {
-      e.preventDefault();
-      if (commandHistory.length === 0) return;
-      historyIndex = Math.min(commandHistory.length, historyIndex + 1);
-      cmdInput.value = commandHistory[historyIndex] ?? '';
-    } else if (e.key === 'Tab') {
-      e.preventDefault();
-      const partial = cmdInput.value.trim().toLowerCase();
-      if (!partial) return;
-      const match = VISIBLE_COMMANDS.find((c) => c.startsWith(partial));
-      if (match) cmdInput.value = match;
-    }
-  });
-
-  // Tapping anywhere in the output panel (not a button, not selecting text)
-  // refocuses the command input, like clicking into a real terminal.
-  document.querySelector('.output-panel')?.addEventListener('click', () => {
-    if (window.getSelection().toString()) return;
-    cmdInput.focus();
-  });
 }
 
 // ===== BOOT SEQUENCE =====
