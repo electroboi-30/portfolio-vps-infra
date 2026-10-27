@@ -114,7 +114,11 @@
         </div>
         <div class="output" id="output"></div>
         <div class="output-footer">
-          <span class="cursor-line">pravin@devops:~$ <span class="cursor">█</span></span>
+          <form id="cmdForm" class="cmd-form" autocomplete="off">
+            <span class="prompt-label">pravin@devops:~$</span>
+            <input type="text" id="cmdInput" class="cmd-input" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="Terminal command input" placeholder="type a command…">
+            <span class="cursor">█</span>
+          </form>
           <span class="hint">tap any command →</span>
         </div>
       </div>
